@@ -1,5 +1,6 @@
 '''
 Copyright 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Modifications copyright 2021 Root Insurance or its affiliates. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
 
@@ -22,7 +23,7 @@ from snapshots_tool_utils import *
 
 # Initialize from environment variable
 LOGLEVEL = os.getenv('LOG_LEVEL', 'ERROR').strip()
-DEST_ACCOUNTID = str(os.getenv('DEST_ACCOUNT')).strip()
+DEST_ACCOUNTID_LIST = str(os.getenv('DEST_ACCOUNTS')).strip().split(',')
 PATTERN = os.getenv('PATTERN', 'ALL_INSTANCES')
 
 if os.getenv('REGION_OVERRIDE', 'NO') != 'NO':
@@ -55,9 +56,7 @@ def lambda_handler(event, context):
                 response_modify = client.modify_db_snapshot_attribute(
                     DBSnapshotIdentifier=snapshot_identifier,
                     AttributeName='restore',
-                    ValuesToAdd=[
-                        DEST_ACCOUNTID
-                    ]
+                    ValuesToAdd=DEST_ACCOUNTID_LIST
                 )
             except Exception as e:
                 logger.error('Exception sharing %s (%s)' % (snapshot_identifier, e))
