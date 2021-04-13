@@ -1,0 +1,15 @@
+steps:
+  - label: "Publish share_snapshots_rds lambda"
+    # Note, Buildkite passes the script around as an ENV VAR so any local variables
+    # need to be escaped
+    command: |
+      cd lambda
+      for component in take share delete_old; do
+        for region in us-east-1 us-west-1 us-west-2; do
+          make \
+            S3DEST=$ARTIFACTS_BUCKET_PREFIX-\$region/rds-snapshot-tool/\$(echo \$component | tr '_' '-')-snapshots/$BUILDKITE_COMMIT.zip \
+            AWSARGS="--region \$region" \
+            ._\${component}_snapshots_rds
+        done
+      done
+    # branches: "root-feature"
