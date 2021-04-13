@@ -12,4 +12,4 @@ steps:
             ._\${component}_snapshots_rds
         done
       done
-    # branches: "root-feature"
+    branches: "root-features"
