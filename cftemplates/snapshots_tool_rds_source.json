@@ -18,6 +18,21 @@
 			"Default": "DEFAULT_BUCKET",
 			"Description": "Name of the bucket that contains the lambda functions to deploy. Leave the default value to download the code from the AWS Managed buckets"
 		},
+		"TakeLambdaCodeBucketKey": {
+		        "Type": "String",
+		        "Default": "take_snapshots_rds.zip",
+		        "Description": "S3 key for the take_snapshots lambda"
+		},
+		"ShareLambdaCodeBucketKey": {
+		        "Type": "String",
+		        "Default": "share_snapshots_rds.zip",
+		        "Description": "S3 key for the share_snapshots lambda"
+		},
+		"DeleteOldLambdaCodeBucketKey": {
+		        "Type": "String",
+		        "Default": "delete_old_snapshots_rds.zip",
+		        "Description": "S3 key for the delete_old_snapshots lambda"
+		},
 		"InstanceNamePattern": {
 			"Type": "String",
 			"Default": "ALL_INSTANCES",
@@ -399,7 +414,7 @@
 							"Ref": "CodeBucket"
 						}]
 					},
-					"S3Key": "take_snapshots_rds.zip"
+					"S3Key": {"Ref": "TakeLambdaCodeBucketKey"}
 				},
 				"MemorySize" : 512,
 				"Description": "This functions triggers snapshots creation for RDS instances. It checks for existing snapshots following the pattern and interval specified in the environment variables with the following format: <dbinstancename>-YYYY-MM-DD-HH-MM",
@@ -444,7 +459,7 @@
 							"Ref": "CodeBucket"
 						}]
 					},
-					"S3Key": "share_snapshots_rds.zip"
+					"S3Key": {"Ref": "ShareLambdaCodeBucketKey"}
 				},
 				"MemorySize" : 512,
 				"Description": "This function shares snapshots created by the take_snapshots_rds function with DEST_ACCOUNTS specified in the environment variables. ",
@@ -486,7 +501,7 @@
 							"Ref": "CodeBucket"
 						}]
 					},
-					"S3Key": "delete_old_snapshots_rds.zip"
+					"S3Key": {"Ref": "DeleteOldLambdaCodeBucketKey"}
 				},
 				"MemorySize" : 512,
 				"Description": "This function deletes snapshots created by the take_snapshots_rds function. ",
